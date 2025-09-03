@@ -7,6 +7,7 @@ use App\Rules\Captcha;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
 
 /**
@@ -34,7 +35,7 @@ class LoginController
      */
     public function redirectPath()
     {
-        return route(homeRoute());
+        return '/admin/dashboard';
     }
 
     /**
@@ -107,7 +108,9 @@ class LoginController
         event(new UserLoggedIn($user));
 
         if (config('boilerplate.access.user.single_login')) {
-            auth()->logoutOtherDevices($request->password);
+            Auth::user()->forceFill([
+                'password' => $request->password,
+            ])->save();
         }
     }
 }

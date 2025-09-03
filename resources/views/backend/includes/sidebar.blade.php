@@ -1,11 +1,11 @@
 <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
     <div class="c-sidebar-brand d-lg-down-none">
-        <svg class="c-sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
-            <use xlink:href="{{ asset('img/brand/coreui.svg#full') }}"></use>
-        </svg>
-        <svg class="c-sidebar-brand-minimized" width="46" height="46" alt="CoreUI Logo">
-            <use xlink:href="{{ asset('img/brand/coreui.svg#signet') }}"></use>
-        </svg>
+        <div class="c-sidebar-brand-full">
+            <img src="{{ asset('img/brand/logo-redmind-1.webp') }}" height="46" alt="RedMind Logo">
+        </div>
+        <div class="c-sidebar-brand-minimized">
+            <img src="{{ asset('img/brand/logo-redmind-1.webp') }}" height="46" alt="RedMind Logo">
+        </div>
     </div><!--c-sidebar-brand-->
 
     <ul class="c-sidebar-nav">
@@ -16,6 +16,32 @@
                 :active="activeClass(Route::is('admin.dashboard'), 'c-active')"
                 icon="c-sidebar-nav-icon cil-speedometer"
                 :text="__('Dashboard')" />
+        </li>
+
+        <li class="c-sidebar-nav-title">@lang('AI Tools')</li>
+        <li class="c-sidebar-nav-dropdown">
+            <x-utils.link
+                href="#"
+                icon="c-sidebar-nav-icon cil-layers"
+                class="c-sidebar-nav-dropdown-toggle"
+                :text="__('AI Management')" />
+
+            <ul class="c-sidebar-nav-dropdown-items">
+                <li class="c-sidebar-nav-item">
+                    <x-utils.link
+                        :href="route('admin.ai.pdf.index')"
+                        class="c-sidebar-nav-link"
+                        :text="__('PDF Upload & Analysis')"
+                        :active="activeClass(Route::is('admin.ai.pdf.*'), 'c-active')" />
+                </li>
+                <li class="c-sidebar-nav-item">
+                    <x-utils.link
+                        :href="route('admin.ai.events.index')"
+                        class="c-sidebar-nav-link"
+                        :text="__('Event Master')"
+                        :active="activeClass(Route::is('admin.ai.events.*'), 'c-active')" />
+                </li>
+            </ul>
         </li>
 
         @if (

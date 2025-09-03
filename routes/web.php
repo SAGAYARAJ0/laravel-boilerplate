@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LocaleController;
+use Illuminate\Support\Facades\Route;
 
 /*
  * Global Routes
@@ -10,6 +11,13 @@ use App\Http\Controllers\LocaleController;
 
 // Switch between the included languages
 Route::get('lang/{lang}', [LocaleController::class, 'change'])->name('locale.change');
+
+/*
+ * Default Route - Must be defined after other routes
+ */
+Route::get('/', function () {
+    return redirect()->route('admin.dashboard');
+})->name('home');
 
 /*
  * Frontend Routes
