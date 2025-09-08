@@ -79,4 +79,10 @@ return [
         'client_secret' => env('TWITTER_CLIENT_SECRET'),
         'redirect' => env('TWITTER_REDIRECT'),
     ],
+
+    'certifier' => [
+        'base_url' => env('CERTIFIER_API_URL', 'https://api.certifier.io/v1'),
+        'token' => env('CERTIFIER_TOKEN'),
+        'version' => env('CERTIFIER_VERSION', '2022-10-26'),
+    ],
 ];

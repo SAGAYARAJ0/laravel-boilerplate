@@ -14,7 +14,8 @@ class AiServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register Certificate Generator Service
+        $this->app->singleton(\App\Domains\Ai\Services\CertificateGeneratorService::class);
     }
 
     /**

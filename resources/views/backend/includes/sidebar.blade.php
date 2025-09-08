@@ -41,6 +41,13 @@
                         :text="__('Event Master')"
                         :active="activeClass(Route::is('admin.ai.events.*'), 'c-active')" />
                 </li>
+                <li class="c-sidebar-nav-item">
+                    <x-utils.link
+                        :href="route('admin.ai.certificates.index')"
+                        class="c-sidebar-nav-link"
+                        :text="__('Certificate Generation')"
+                        :active="activeClass(Route::is('admin.ai.certificates.*'), 'c-active')" />
+                </li>
             </ul>
         </li>
 

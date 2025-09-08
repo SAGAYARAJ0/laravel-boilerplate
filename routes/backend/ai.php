@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\AiController;
 use App\Domains\Ai\Http\Controllers\Backend\EventController;
+use App\Domains\Ai\Http\Controllers\Backend\CertificateController;
 use Tabuna\Breadcrumbs\Trail;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,106 @@ Route::group([
             
         Route::post('/reprocess/{fileId}', [AiController::class, 'reprocessPdf'])
             ->name('reprocess');
+    });
+
+    // Certificate Templates routes
+    Route::group([
+        'prefix' => 'certificates',
+        'as' => 'certificates.',
+    ], function () {
+        Route::get('/', [CertificateController::class, 'index'])
+            ->name('index')
+            ->breadcrumbs(function (Trail $trail) {
+                $trail->parent('admin.dashboard')
+                    ->push(__('Certificate Templates'), route('admin.ai.certificates.index'));
+            });
+            
+        Route::get('/create', [CertificateController::class, 'create'])
+            ->name('create')
+            ->breadcrumbs(function (Trail $trail) {
+                $trail->parent('admin.ai.certificates.index')
+                    ->push(__('Create Template'), route('admin.ai.certificates.create'));
+            });
+            
+        Route::post('/', [CertificateController::class, 'store'])
+            ->name('store');
+            
+        Route::get('/{certificate}', [CertificateController::class, 'show'])
+            ->name('show')
+            ->breadcrumbs(function (Trail $trail, $certificate) {
+                $trail->parent('admin.ai.certificates.index')
+                    ->push(__('View Template'), route('admin.ai.certificates.show', $certificate));
+            });
+            
+        Route::get('/{certificate}/edit', [CertificateController::class, 'edit'])
+            ->name('edit')
+            ->breadcrumbs(function (Trail $trail, $certificate) {
+                $trail->parent('admin.ai.certificates.show', $certificate)
+                    ->push(__('Edit Template'), route('admin.ai.certificates.edit', $certificate));
+            });
+            
+        Route::put('/{certificate}', [CertificateController::class, 'update'])
+            ->name('update');
+            
+        Route::delete('/{certificate}', [CertificateController::class, 'destroy'])
+            ->name('destroy');
+            
+        // Certificate generation routes
+        Route::post('/{certificate}/generate-single', [CertificateController::class, 'generateSingle'])
+            ->name('generate-single');
+            
+        Route::post('/{certificate}/generate-bulk', [CertificateController::class, 'generateBulk'])
+            ->name('generate-bulk');
+            
+        Route::post('/{certificate}/preview', [CertificateController::class, 'preview'])
+            ->name('preview');
+            
+        Route::get('/{certificate}/data', [CertificateController::class, 'getTemplateData'])
+            ->name('data');
+            
+        // Direct download route for certificates
+        Route::get('/download/{generatedCertificate}', [CertificateController::class, 'downloadCertificate'])
+            ->name('download');
+            
+        // Certifier import page
+        Route::get('/certifier-import', function() {
+            return view('backend.ai.certificates.certifier-import');
+        })->name('certifier-import')
+        ->breadcrumbs(function (Trail $trail) {
+            $trail->parent('admin.ai.certificates.index')
+                ->push(__('Import from Certifier'), route('admin.ai.certificates.certifier-import'));
+        });
+        
+        // Debug route to log button clicks
+        Route::post('/log-certifier-click', [CertificateController::class, 'logCertifierClick'])
+            ->name('log-certifier-click');
+            
+        // Certifier integration routes
+        Route::group([
+            'prefix' => 'certifier',
+            'as' => 'certifier.',
+        ], function () {
+            Route::get('/designs', [CertificateController::class, 'getCertifierDesigns'])
+                ->name('designs');
+                
+            Route::post('/import-design/{designId}', [CertificateController::class, 'importCertifierDesign'])
+                ->name('import-design');
+                
+            Route::post('/{certificate}/create-credential', [CertificateController::class, 'createCertifierCredential'])
+                ->name('create-credential');
+                
+            Route::post('/{certificate}/issue-credential/{credentialId}', [CertificateController::class, 'issueCertifierCredential'])
+                ->name('issue-credential');
+                
+            Route::post('/{certificate}/send-credential/{credentialId}', [CertificateController::class, 'sendCertifierCredential'])
+                ->name('send-credential');
+                
+            Route::post('/{certificate}/create-issue-send', [CertificateController::class, 'createIssueSendCredential'])
+                ->name('create-issue-send');
+                
+            Route::get('/test-connection', [CertificateController::class, 'testCertifierConnection'])
+                ->name('test-connection');
+        });
     });
     Route::group([
         'prefix' => 'pdf',
